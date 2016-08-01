@@ -231,7 +231,7 @@ Partial Class frmMain
         '
         Me.Button1.Location = New System.Drawing.Point(3, 3)
         Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(112, 99)
+        Me.Button1.Size = New System.Drawing.Size(100, 100)
         Me.Button1.TabIndex = 1
         Me.Button1.Text = "Button1"
         Me.Button1.UseVisualStyleBackColor = True
@@ -240,6 +240,7 @@ Partial Class frmMain
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(12.0!, 25.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.AutoSize = True
         Me.ClientSize = New System.Drawing.Size(1200, 764)
         Me.Controls.Add(Me.pnl_game)
         Me.Controls.Add(Me.pnl_controls)
