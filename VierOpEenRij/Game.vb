@@ -1,4 +1,7 @@
-﻿Friend Class Game
+﻿Option Explicit On
+Option Strict On
+
+Friend Class Game
 
     Enum Player
         NONE
@@ -6,7 +9,7 @@
         Two
     End Enum
 
-    Public Function get_color(ByVal player As Player)
+    Public Shared Function GetColor(ByVal player As Player) As Color
         Select Case player
             Case Player.One
                 Return Color.Gold
