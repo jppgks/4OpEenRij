@@ -22,6 +22,7 @@ Partial Class frmMain
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
         Me.pnl_controls = New System.Windows.Forms.Panel()
         Me.grp_current_player = New System.Windows.Forms.GroupBox()
         Me.lbl_time = New System.Windows.Forms.Label()
@@ -30,8 +31,8 @@ Partial Class frmMain
         Me.grp_score = New System.Windows.Forms.GroupBox()
         Me.lbl_score2 = New System.Windows.Forms.Label()
         Me.lbl_score1 = New System.Windows.Forms.Label()
-        Me.lbl_score_player2 = New System.Windows.Forms.Label()
-        Me.lbl_score_player1 = New System.Windows.Forms.Label()
+        Me.lbl_name_player2 = New System.Windows.Forms.Label()
+        Me.lbl_name_player1 = New System.Windows.Forms.Label()
         Me.grp_settings = New System.Windows.Forms.GroupBox()
         Me.btn_stop = New System.Windows.Forms.Button()
         Me.btn_start = New System.Windows.Forms.Button()
@@ -40,6 +41,7 @@ Partial Class frmMain
         Me.lbl_player2_settings = New System.Windows.Forms.Label()
         Me.lbl_player1_settings = New System.Windows.Forms.Label()
         Me.pnl_game = New System.Windows.Forms.Panel()
+        Me.tmr_turn = New System.Windows.Forms.Timer(Me.components)
         Me.pnl_controls.SuspendLayout()
         Me.grp_current_player.SuspendLayout()
         CType(Me.pic_current, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -101,8 +103,8 @@ Partial Class frmMain
         '
         Me.grp_score.Controls.Add(Me.lbl_score2)
         Me.grp_score.Controls.Add(Me.lbl_score1)
-        Me.grp_score.Controls.Add(Me.lbl_score_player2)
-        Me.grp_score.Controls.Add(Me.lbl_score_player1)
+        Me.grp_score.Controls.Add(Me.lbl_name_player2)
+        Me.grp_score.Controls.Add(Me.lbl_name_player1)
         Me.grp_score.Location = New System.Drawing.Point(11, 386)
         Me.grp_score.Name = "grp_score"
         Me.grp_score.Size = New System.Drawing.Size(416, 158)
@@ -132,21 +134,21 @@ Partial Class frmMain
         '
         'lbl_score_player2
         '
-        Me.lbl_score_player2.AutoSize = True
-        Me.lbl_score_player2.Location = New System.Drawing.Point(6, 97)
-        Me.lbl_score_player2.Name = "lbl_score_player2"
-        Me.lbl_score_player2.Size = New System.Drawing.Size(92, 25)
-        Me.lbl_score_player2.TabIndex = 6
-        Me.lbl_score_player2.Text = "Speler 2"
+        Me.lbl_name_player2.AutoSize = True
+        Me.lbl_name_player2.Location = New System.Drawing.Point(6, 97)
+        Me.lbl_name_player2.Name = "lbl_score_player2"
+        Me.lbl_name_player2.Size = New System.Drawing.Size(92, 25)
+        Me.lbl_name_player2.TabIndex = 6
+        Me.lbl_name_player2.Text = "Speler 2"
         '
         'lbl_score_player1
         '
-        Me.lbl_score_player1.AutoSize = True
-        Me.lbl_score_player1.Location = New System.Drawing.Point(6, 53)
-        Me.lbl_score_player1.Name = "lbl_score_player1"
-        Me.lbl_score_player1.Size = New System.Drawing.Size(92, 25)
-        Me.lbl_score_player1.TabIndex = 5
-        Me.lbl_score_player1.Text = "Speler 1"
+        Me.lbl_name_player1.AutoSize = True
+        Me.lbl_name_player1.Location = New System.Drawing.Point(6, 53)
+        Me.lbl_name_player1.Name = "lbl_score_player1"
+        Me.lbl_name_player1.Size = New System.Drawing.Size(92, 25)
+        Me.lbl_name_player1.TabIndex = 5
+        Me.lbl_name_player1.Text = "Speler 1"
         '
         'grp_settings
         '
@@ -226,6 +228,10 @@ Partial Class frmMain
         Me.pnl_game.Size = New System.Drawing.Size(737, 740)
         Me.pnl_game.TabIndex = 6
         '
+        'tmr_turn
+        '
+        Me.tmr_turn.Interval = 1
+        '
         'frmMain
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(12.0!, 25.0!)
@@ -258,8 +264,8 @@ Partial Class frmMain
     Friend WithEvents grp_score As GroupBox
     Friend WithEvents lbl_score2 As Label
     Friend WithEvents lbl_score1 As Label
-    Friend WithEvents lbl_score_player2 As Label
-    Friend WithEvents lbl_score_player1 As Label
+    Friend WithEvents lbl_name_player2 As Label
+    Friend WithEvents lbl_name_player1 As Label
     Friend WithEvents grp_settings As GroupBox
     Friend WithEvents btn_stop As Button
     Friend WithEvents btn_start As Button
@@ -268,4 +274,5 @@ Partial Class frmMain
     Friend WithEvents lbl_player2_settings As Label
     Friend WithEvents lbl_player1_settings As Label
     Friend WithEvents pnl_game As Panel
+    Friend WithEvents tmr_turn As Timer
 End Class
