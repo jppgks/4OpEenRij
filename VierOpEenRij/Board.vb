@@ -60,11 +60,7 @@ Friend Class Board
                 Return
             End If
         Next
-        CheckForEndingSituation()
-    End Sub
-
-    Private Sub CheckForEndingSituation()
-        Throw New NotImplementedException()
+        game.CheckForEndingSituation()
     End Sub
 
     ''' Flattens the 2D index (column, row) to an index in the one-dimensional panel.Controls list.
@@ -100,7 +96,7 @@ Friend Class Board
 
 
     ' Custom class derived from PictureBox, representing a coin on the game panel.
-    Private Class Coin
+    Friend Class Coin
         Inherits PictureBox
 
         Shared INACTIVE_COLOR As Color = Drawing.Color.Gray
@@ -119,7 +115,7 @@ Friend Class Board
         End Sub
 
         ' Makes coin of given size appear round on the panel.
-        Private Function MakeCircle(ByVal size As Integer) As Region
+        Shared Function MakeCircle(ByVal size As Integer) As Region
             Dim path As New Drawing2D.GraphicsPath
             path.AddEllipse(0, 0, size, size)
             Return New Region(path)
