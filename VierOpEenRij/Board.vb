@@ -55,12 +55,12 @@ Friend Class Board
         For i As Integer = height To 0 Step -1
             Dim coin = CType(panel.Controls.Item(index + i), Coin)
             If coin.BackColor.Equals(Color.Gray) Then
-                coin.Color(game.active_player.color)
-                game.SwitchActivePlayer()
+                coin.Color(game.current_turn.player.color)
+                game.CheckForEndingSituation()
+                game.SwitchTurns()
                 Return
             End If
         Next
-        game.CheckForEndingSituation()
     End Sub
 
     ''' Flattens the 2D index (column, row) to an index in the one-dimensional panel.Controls list.
