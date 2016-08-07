@@ -5,13 +5,20 @@ Option Strict On
 Public Class frmMain
 
     Dim game As Game = New Game()
+    Dim board As Board = New Board(BOARD_WIDTH - 1, BOARD_HEIGHT - 1, game)
 
     Const BOARD_WIDTH As Integer = 7
     Const BOARD_HEIGHT As Integer = 6
 
 
     Private Sub frmMain_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        Dim board = New Board(BOARD_WIDTH - 1, BOARD_HEIGHT - 1, game)
+        InitializeBoard()
+        pic_current.Region = Board.Coin.MakeCircle(pic_current.Width)
+    End Sub
+
+    Private Sub InitializeBoard()
+        pnl_game.Controls.Clear()
+        game.board = board
         board.AddToPanel(pnl_game)
     End Sub
 
@@ -19,6 +26,7 @@ Public Class frmMain
         DisableControl(CType(btn_start, Control))
         DisableControl(CType(txt_player1, Control))
         DisableControl(CType(txt_player2, Control))
+        EnableControl(CType(btn_stop, Control))
         game.Start(New String() {txt_player1.Text, txt_player2.Text})
     End Sub
 
@@ -26,7 +34,15 @@ Public Class frmMain
         control.Enabled = False
     End Sub
 
+    Private Sub EnableControl(ByRef control As Control)
+        control.Enabled = True
+    End Sub
+
     Private Sub btn_stop_Click(sender As Object, e As EventArgs) Handles btn_stop.Click
-        Close()
+        ' This functionality restarts the game
+        board = New Board(BOARD_WIDTH - 1, BOARD_HEIGHT - 1, game)
+        InitializeBoard()
+        game.board = board
+        game.Start(New String() {txt_player1.Text, txt_player2.Text})
     End Sub
 End Class

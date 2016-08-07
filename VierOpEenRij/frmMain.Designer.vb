@@ -30,8 +30,8 @@ Partial Class frmMain
         Me.grp_score = New System.Windows.Forms.GroupBox()
         Me.lbl_score2 = New System.Windows.Forms.Label()
         Me.lbl_score1 = New System.Windows.Forms.Label()
-        Me.lbl_player2_score = New System.Windows.Forms.Label()
-        Me.lbl_player1_score = New System.Windows.Forms.Label()
+        Me.lbl_score_player2 = New System.Windows.Forms.Label()
+        Me.lbl_score_player1 = New System.Windows.Forms.Label()
         Me.grp_settings = New System.Windows.Forms.GroupBox()
         Me.btn_stop = New System.Windows.Forms.Button()
         Me.btn_start = New System.Windows.Forms.Button()
@@ -93,7 +93,7 @@ Partial Class frmMain
         '
         Me.pic_current.Location = New System.Drawing.Point(11, 61)
         Me.pic_current.Name = "pic_current"
-        Me.pic_current.Size = New System.Drawing.Size(100, 80)
+        Me.pic_current.Size = New System.Drawing.Size(100, 100)
         Me.pic_current.TabIndex = 0
         Me.pic_current.TabStop = False
         '
@@ -101,8 +101,8 @@ Partial Class frmMain
         '
         Me.grp_score.Controls.Add(Me.lbl_score2)
         Me.grp_score.Controls.Add(Me.lbl_score1)
-        Me.grp_score.Controls.Add(Me.lbl_player2_score)
-        Me.grp_score.Controls.Add(Me.lbl_player1_score)
+        Me.grp_score.Controls.Add(Me.lbl_score_player2)
+        Me.grp_score.Controls.Add(Me.lbl_score_player1)
         Me.grp_score.Location = New System.Drawing.Point(11, 386)
         Me.grp_score.Name = "grp_score"
         Me.grp_score.Size = New System.Drawing.Size(416, 158)
@@ -130,23 +130,23 @@ Partial Class frmMain
         Me.lbl_score1.Text = "0"
         Me.lbl_score1.TextAlign = System.Drawing.ContentAlignment.TopRight
         '
-        'lbl_player2_score
+        'lbl_score_player2
         '
-        Me.lbl_player2_score.AutoSize = True
-        Me.lbl_player2_score.Location = New System.Drawing.Point(6, 97)
-        Me.lbl_player2_score.Name = "lbl_player2_score"
-        Me.lbl_player2_score.Size = New System.Drawing.Size(92, 25)
-        Me.lbl_player2_score.TabIndex = 6
-        Me.lbl_player2_score.Text = "Speler 2"
+        Me.lbl_score_player2.AutoSize = True
+        Me.lbl_score_player2.Location = New System.Drawing.Point(6, 97)
+        Me.lbl_score_player2.Name = "lbl_score_player2"
+        Me.lbl_score_player2.Size = New System.Drawing.Size(92, 25)
+        Me.lbl_score_player2.TabIndex = 6
+        Me.lbl_score_player2.Text = "Speler 2"
         '
-        'lbl_player1_score
+        'lbl_score_player1
         '
-        Me.lbl_player1_score.AutoSize = True
-        Me.lbl_player1_score.Location = New System.Drawing.Point(6, 53)
-        Me.lbl_player1_score.Name = "lbl_player1_score"
-        Me.lbl_player1_score.Size = New System.Drawing.Size(92, 25)
-        Me.lbl_player1_score.TabIndex = 5
-        Me.lbl_player1_score.Text = "Speler 1"
+        Me.lbl_score_player1.AutoSize = True
+        Me.lbl_score_player1.Location = New System.Drawing.Point(6, 53)
+        Me.lbl_score_player1.Name = "lbl_score_player1"
+        Me.lbl_score_player1.Size = New System.Drawing.Size(92, 25)
+        Me.lbl_score_player1.TabIndex = 5
+        Me.lbl_score_player1.Text = "Speler 1"
         '
         'grp_settings
         '
@@ -165,6 +165,7 @@ Partial Class frmMain
         '
         'btn_stop
         '
+        Me.btn_stop.Enabled = False
         Me.btn_stop.Location = New System.Drawing.Point(204, 240)
         Me.btn_stop.Name = "btn_stop"
         Me.btn_stop.Size = New System.Drawing.Size(144, 100)
@@ -257,8 +258,8 @@ Partial Class frmMain
     Friend WithEvents grp_score As GroupBox
     Friend WithEvents lbl_score2 As Label
     Friend WithEvents lbl_score1 As Label
-    Friend WithEvents lbl_player2_score As Label
-    Friend WithEvents lbl_player1_score As Label
+    Friend WithEvents lbl_score_player2 As Label
+    Friend WithEvents lbl_score_player1 As Label
     Friend WithEvents grp_settings As GroupBox
     Friend WithEvents btn_stop As Button
     Friend WithEvents btn_start As Button
