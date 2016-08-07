@@ -1,9 +1,9 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class frmMain
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
-    <System.Diagnostics.DebuggerNonUserCode()> _
+    <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
             If disposing AndAlso components IsNot Nothing Then
@@ -20,7 +20,7 @@ Partial Class frmMain
     'NOTE: The following procedure is required by the Windows Form Designer
     'It can be modified using the Windows Form Designer.  
     'Do not modify it using the code editor.
-    <System.Diagnostics.DebuggerStepThrough()> _
+    <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.pnl_controls = New System.Windows.Forms.Panel()
         Me.grp_current_player = New System.Windows.Forms.GroupBox()
@@ -40,13 +40,11 @@ Partial Class frmMain
         Me.lbl_player2_settings = New System.Windows.Forms.Label()
         Me.lbl_player1_settings = New System.Windows.Forms.Label()
         Me.pnl_game = New System.Windows.Forms.Panel()
-        Me.Button1 = New System.Windows.Forms.Button()
         Me.pnl_controls.SuspendLayout()
         Me.grp_current_player.SuspendLayout()
         CType(Me.pic_current, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.grp_score.SuspendLayout()
         Me.grp_settings.SuspendLayout()
-        Me.pnl_game.SuspendLayout()
         Me.SuspendLayout()
         '
         'pnl_controls
@@ -221,20 +219,11 @@ Partial Class frmMain
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.pnl_game.AutoSize = True
-        Me.pnl_game.Controls.Add(Me.Button1)
+        Me.pnl_game.Enabled = False
         Me.pnl_game.Location = New System.Drawing.Point(12, 12)
         Me.pnl_game.Name = "pnl_game"
         Me.pnl_game.Size = New System.Drawing.Size(737, 740)
         Me.pnl_game.TabIndex = 6
-        '
-        'Button1
-        '
-        Me.Button1.Location = New System.Drawing.Point(3, 3)
-        Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(100, 100)
-        Me.Button1.TabIndex = 1
-        Me.Button1.Text = "Button1"
-        Me.Button1.UseVisualStyleBackColor = True
         '
         'frmMain
         '
@@ -256,7 +245,6 @@ Partial Class frmMain
         Me.grp_score.PerformLayout()
         Me.grp_settings.ResumeLayout(False)
         Me.grp_settings.PerformLayout()
-        Me.pnl_game.ResumeLayout(False)
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -279,5 +267,4 @@ Partial Class frmMain
     Friend WithEvents lbl_player2_settings As Label
     Friend WithEvents lbl_player1_settings As Label
     Friend WithEvents pnl_game As Panel
-    Friend WithEvents Button1 As Button
 End Class
