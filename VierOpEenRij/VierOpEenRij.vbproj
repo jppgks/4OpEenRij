@@ -88,6 +88,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Board.vb" />
+    <Compile Include="EndAlert.Designer.vb">
+      <DependentUpon>EndAlert.vb</DependentUpon>
+    </Compile>
+    <Compile Include="EndAlert.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="frmMain.Designer.vb">
       <DependentUpon>frmMain.vb</DependentUpon>
     </Compile>
@@ -112,6 +118,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="EndAlert.resx">
+      <DependentUpon>EndAlert.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="frmMain.resx">
       <DependentUpon>frmMain.vb</DependentUpon>
     </EmbeddedResource>

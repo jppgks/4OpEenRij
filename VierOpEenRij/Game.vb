@@ -58,9 +58,67 @@ Friend Class Game
     End Sub
 
     Friend Sub CheckForEndingSituation()
-        ' Not implemented yet
+        ' Check rows
+        CheckStraight(board.height, board.width, True)
+        ' Check columns
+        CheckStraight(board.width, board.height, False)
+        ' Check diagonals upwards
+        CheckDiagonals(board.width, board.height, True)
+        ' Check diagonals downwards
+        CheckDiagonals(board.width, board.height, False)
     End Sub
 
+    Private Sub CheckStraight(ByVal vertical_length As Integer, ByVal horizontal_length As Integer, ByVal is_check_for_row As Boolean)
+        Dim inactive_color As Color = Board.Coin.INACTIVE_COLOR
+        Dim streak_color As Color
+        Dim current_coin_color As Color
+        Dim winning_color As Color = Board.Coin.INACTIVE_COLOR
+        Dim cnt As Integer
+        For row As Integer = 0 To vertical_length
+            cnt = 0
+            If is_check_for_row Then
+                streak_color = board.GetCoinAt(0, row).BackColor
+            Else
+                streak_color = board.GetCoinAt(row, 0).BackColor
+            End If
+            If streak_color <> inactive_color Then
+                cnt += 1
+            End If
+            For clm As Integer = 1 To horizontal_length
+                If is_check_for_row Then
+                    current_coin_color = board.GetCoinAt(clm, row).BackColor
+                Else
+                    current_coin_color = board.GetCoinAt(row, clm).BackColor
+                End If
+                If current_coin_color.Equals(inactive_color) Then
+                    cnt = 0
+                    streak_color = current_coin_color
+                    Continue For
+                End If
+                If Not streak_color.Equals(inactive_color) And current_coin_color.Equals(streak_color) Then
+                    cnt += 1
+                Else
+                    streak_color = current_coin_color
+                    cnt = 1
+                    Continue For
+                End If
+                If cnt >= 4 Then
+                    winning_color = streak_color
+                    Exit For
+                    Exit For
+                End If
+            Next
+        Next
+        If Not winning_color.IsEmpty Then
+            Dim frm As Form = New EndAlert(winning_color)
+            frm.ShowDialog()
+            ' Todo: stop game
+        End If
+    End Sub
+
+    Private Sub CheckDiagonals(ByVal vertical_length As Integer, ByVal horizontal_length As Integer, ByVal is_check_for_upwards As Boolean)
+
+    End Sub
 
     ' Custom class representing a player in the game with it's color, name and id.
     Class Player

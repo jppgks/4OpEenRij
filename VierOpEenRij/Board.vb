@@ -4,8 +4,8 @@ Option Strict On
 
 Friend Class Board
 
-    Private Property width As Integer
-    Private Property height As Integer
+    Friend Property width As Integer
+    Friend Property height As Integer
     Private Property game As Game
     Private Property coins As List(Of List(Of PictureBox)) = New List(Of List(Of PictureBox))
     Private Property buttons As List(Of Btn) = New List(Of Btn)
@@ -69,6 +69,10 @@ Friend Class Board
         Return column * (height + 1) + row
     End Function
 
+    Friend Function GetCoinAt(ByVal column As Integer, ByVal row As Integer) As Coin
+        Return CType(panel.Controls(LinearizedIndex(column, row)), Coin)
+    End Function
+
 
     ' Custom class derived from Button, representing a button on the game panel.
     Private Class Btn
@@ -99,7 +103,7 @@ Friend Class Board
     Friend Class Coin
         Inherits PictureBox
 
-        Shared INACTIVE_COLOR As Color = Drawing.Color.Gray
+        Friend Shared INACTIVE_COLOR As Color = Drawing.Color.Gray
         Private Const COIN_SIZE As Integer = 50
         ' Vertical offset, accounting for buttons above the coins.
         Private Const BUTTON_OFFSET As Integer = Btn.SIDE_LENGTH + 10
