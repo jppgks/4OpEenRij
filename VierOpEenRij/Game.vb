@@ -30,6 +30,7 @@ Friend Class Game
         name_labels.Add(frmMain.lbl_name_player2)
     End Sub
 
+    ' Add all labels for the scores of the players to the score_labels list.
     Private Sub InitializeScoreLabels()
         score_labels.Add(frmMain.lbl_score1)
         score_labels.Add(frmMain.lbl_score2)
@@ -40,8 +41,6 @@ Friend Class Game
         For i As Integer = 0 To names.GetUpperBound(0)
             Dim player = New Player(i + 1, CType(colors(i), Color), names(i), CType(name_labels(i), Label), CType(score_labels(i), Label))
             players.Enqueue(player)
-            ' Add player's name to the name label
-            CType(name_labels(i), Control).Text = player.name
         Next
     End Sub
 
@@ -59,10 +58,12 @@ Friend Class Game
         frmMain.pnl_game.Enabled = True
     End Sub
 
-    Private Sub EndGame(ByVal winner As Player)
+    Private Sub EndGame(Optional ByVal winner As Player = Nothing)
+        ' Update scores
         If winner IsNot Nothing Then
             winner.AddPoint()
         End If
+        ' Prepare board for playing the next point
         frmMain.board = New Board(frmMain.BOARD_WIDTH - 1, frmMain.BOARD_HEIGHT - 1, Me)
         frmMain.InitializeBoard()
         board = frmMain.board
@@ -86,8 +87,10 @@ Friend Class Game
 
     Friend Sub CheckForDraw()
         Dim is_draw As Boolean = True
+        ' Look for a column that isn't full
         For Each bool As Boolean In full_columns
             If Not bool Then
+                ' Not all columns are full
                 is_draw = False
                 Exit For
             End If
@@ -95,7 +98,7 @@ Friend Class Game
         If is_draw Then
             Dim frm As Form = New EndAlert(is_draw:=True)
             frm.ShowDialog()
-            EndGame(Nothing)
+            EndGame()
         End If
     End Sub
 
