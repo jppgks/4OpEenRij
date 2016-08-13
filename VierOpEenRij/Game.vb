@@ -63,7 +63,20 @@ Friend Class Game
         If winner IsNot Nothing Then
             winner.AddPoint()
         End If
+        frmMain.board = New Board(frmMain.BOARD_WIDTH - 1, frmMain.BOARD_HEIGHT - 1, Me)
+        frmMain.InitializeBoard()
+        board = frmMain.board
+        full_columns = New BitArray(board.width + 1)
+        full_columns.SetAll(False)
     End Sub
+
+    Private Function GetPlayerNames() As String()
+        Dim names As List(Of String) = New List(Of String)
+        For Each player In players
+            names.Add(player.name)
+        Next
+        Return names.ToArray()
+    End Function
 
     ' Create new turn for next player
     Friend Sub SwitchTurns()
