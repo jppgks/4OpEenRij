@@ -213,9 +213,10 @@ Friend Class Game
             End Try
         Next
         If Not winning_color.Equals(inactive_color) Then
-            Dim frm As Form = New EndAlert(winning_color:=winning_color)
+            Dim winner As Player = GetPlayerFromColor(winning_color)
+            Dim frm As Form = New EndAlert(winner:=winner)
             frm.ShowDialog()
-            EndGame(GetPlayerFromColor(winning_color))
+            EndGame(winner)
         End If
     End Sub
 
@@ -254,6 +255,10 @@ Friend Class Game
             score += 1
             lbl_score.Text = score.ToString
         End Sub
+
+        Overrides Function ToString() As String
+            Return name
+        End Function
     End Class
 
 
