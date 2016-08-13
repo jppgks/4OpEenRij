@@ -10,6 +10,7 @@ Friend Class Game
     Private Property scores As ArrayList = New ArrayList()
     Private name_labels As ArrayList = New ArrayList()
     Private colors As ArrayList = New ArrayList()
+    Friend full_columns As BitArray
 
 
     Sub New()
@@ -30,6 +31,8 @@ Friend Class Game
     End Sub
 
     Friend Sub Start(ByVal names As String())
+        full_columns = New BitArray(board.width + 1)
+        full_columns.SetAll(False)
         players.Clear()
         InitializeNameLabels()
         InitializePlayers(names)
@@ -57,7 +60,22 @@ Friend Class Game
         players.Enqueue(current_turn.player)
     End Sub
 
-    Friend Sub CheckForEndingSituation(ByVal column As Integer, ByVal row As Integer)
+    Friend Sub CheckForDraw()
+        Dim is_draw As Boolean = True
+        For Each bool As Boolean In full_columns
+            If Not bool Then
+                is_draw = False
+                Exit For
+            End If
+        Next
+        If is_draw Then
+            Dim frm As Form = New EndAlert(is_draw:=True)
+            frm.ShowDialog()
+            ' Todo: stop game
+        End If
+    End Sub
+
+    Friend Sub CheckForWinningSituation(ByVal column As Integer, ByVal row As Integer)
         Check(column, row, 0)  ' rows
         Check(column, row, 1)  ' columns
         Check(column, row, 2)  ' diagonal down
@@ -113,7 +131,7 @@ Friend Class Game
         Dim inactive_color As Color = Board.Coin.INACTIVE_COLOR
         Dim streak_coin As Board.Coin
         Dim streak_color As Color
-        Dim streak_coin_tag As Tuple(Of Integer, Integer)
+        Dim streak_coin_tag As Tuple(Of Integer, Integer) = Nothing
         Dim current_coin_color As Color
         Dim winning_color As Color = inactive_color
         Dim cnt As Integer
@@ -171,7 +189,7 @@ Friend Class Game
             End Try
         Next
         If Not winning_color.Equals(inactive_color) Then
-            Dim frm As Form = New EndAlert(winning_color)
+            Dim frm As Form = New EndAlert(winning_color:=winning_color)
             frm.ShowDialog()
             ' Todo: stop game
         End If

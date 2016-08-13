@@ -56,10 +56,15 @@ Friend Class Board
             Dim coin = CType(panel.Controls.Item(index + i), Coin)
             If coin.BackColor.Equals(Color.Gray) Then
                 coin.Color(game.current_turn.player.color)
-                game.CheckForEndingSituation(column, CType(coin.Tag, Tuple(Of Integer, Integer)).Item2)
+                game.CheckForWinningSituation(column, CType(coin.Tag, Tuple(Of Integer, Integer)).Item2)
+                If i = 0 Then
+                    game.full_columns(column) = True
+                    game.CheckForDraw()
+                End If
                 game.SwitchTurns()
                 Return
             End If
+
         Next
     End Sub
 
