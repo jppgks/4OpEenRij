@@ -4,8 +4,8 @@ Option Strict On
 
 Friend Class Board
 
-    Private Property width As Integer
-    Private Property height As Integer
+    Friend Property width As Integer
+    Friend Property height As Integer
     Private Property game As Game
     Private Property coins As List(Of List(Of PictureBox)) = New List(Of List(Of PictureBox))
     Private Property buttons As List(Of Btn) = New List(Of Btn)
@@ -56,10 +56,15 @@ Friend Class Board
             Dim coin = CType(panel.Controls.Item(index + i), Coin)
             If coin.BackColor.Equals(Color.Gray) Then
                 coin.Color(game.current_turn.player.color)
-                game.CheckForEndingSituation()
+                game.CheckForWinningSituation(column, CType(coin.Tag, Tuple(Of Integer, Integer)).Item2)
+                If i = 0 Then
+                    game.full_columns(column) = True
+                    game.CheckForDraw()
+                End If
                 game.SwitchTurns()
                 Return
             End If
+
         Next
     End Sub
 
@@ -67,6 +72,13 @@ Friend Class Board
     ''' <returns>The index for the element at (column, row) in the one-dimensional panel.Controls list.</returns>
     Private Function LinearizedIndex(ByVal column As Integer, ByVal row As Integer) As Integer
         Return column * (height + 1) + row
+    End Function
+
+    Friend Function GetCoinAt(ByVal column As Integer, ByVal row As Integer) As Coin
+        If column < 0 Or column > width Or row < 0 Or row > height Then
+            Throw New IndexOutOfRangeException
+        End If
+        Return CType(panel.Controls(LinearizedIndex(column, row)), Coin)
     End Function
 
 
@@ -99,7 +111,7 @@ Friend Class Board
     Friend Class Coin
         Inherits PictureBox
 
-        Shared INACTIVE_COLOR As Color = Drawing.Color.Gray
+        Friend Shared INACTIVE_COLOR As Color = Drawing.Color.Gray
         Private Const COIN_SIZE As Integer = 50
         ' Vertical offset, accounting for buttons above the coins.
         Private Const BUTTON_OFFSET As Integer = Btn.SIDE_LENGTH + 10

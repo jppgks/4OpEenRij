@@ -10,6 +10,7 @@ Friend Class Game
     Private Property scores As ArrayList = New ArrayList()
     Private name_labels As ArrayList = New ArrayList()
     Private colors As ArrayList = New ArrayList()
+    Friend full_columns As BitArray
 
 
     Sub New()
@@ -30,6 +31,8 @@ Friend Class Game
     End Sub
 
     Friend Sub Start(ByVal names As String())
+        full_columns = New BitArray(board.width + 1)
+        full_columns.SetAll(False)
         players.Clear()
         InitializeNameLabels()
         InitializePlayers(names)
@@ -57,10 +60,140 @@ Friend Class Game
         players.Enqueue(current_turn.player)
     End Sub
 
-    Friend Sub CheckForEndingSituation()
-        ' Not implemented yet
+    Friend Sub CheckForDraw()
+        Dim is_draw As Boolean = True
+        For Each bool As Boolean In full_columns
+            If Not bool Then
+                is_draw = False
+                Exit For
+            End If
+        Next
+        If is_draw Then
+            Dim frm As Form = New EndAlert(is_draw:=True)
+            frm.ShowDialog()
+            ' Todo: stop game
+        End If
     End Sub
 
+    Friend Sub CheckForWinningSituation(ByVal column As Integer, ByVal row As Integer)
+        Check(column, row, 0)  ' rows
+        Check(column, row, 1)  ' columns
+        Check(column, row, 2)  ' diagonal down
+        Check(column, row, 3)  ' diagonal up
+    End Sub
+
+    Private Function TryStreakGetCoin(ByVal x As Integer, ByVal y As Integer, ByVal i As Integer, ByVal situation As Integer) As Board.Coin
+        Select Case situation
+            Case 0  ' rows
+                Return board.GetCoinAt(x + i, y)
+            Case 1  ' columns
+                Return board.GetCoinAt(x, y + i)
+            Case 2  ' diagonal down
+                Return board.GetCoinAt(x + i, y + i)
+            Case 3  ' diagonal up
+                Return board.GetCoinAt(x + i, y - i)
+        End Select
+        Return Nothing
+    End Function
+
+    Private Function TryStreakGetNextCoin(ByVal x As Integer, ByVal y As Integer, ByVal j As Integer, ByVal streak_coin_tag As Tuple(Of Integer, Integer), ByVal situation As Integer) As Board.Coin
+        Select Case situation
+            Case 0  ' rows
+                Return board.GetCoinAt(streak_coin_tag.Item1 + j + 1, y)
+            Case 1  ' columns
+                Return board.GetCoinAt(x, streak_coin_tag.Item2 + j + 1)
+            Case 2  ' diagonal down
+                Return board.GetCoinAt(streak_coin_tag.Item1 + j + 1, streak_coin_tag.Item2 + j + 1)
+            Case 3  ' diagonal up
+                Return board.GetCoinAt(streak_coin_tag.Item1 + j + 1, streak_coin_tag.Item2 - (j + 1))
+        End Select
+        Return Nothing
+    End Function
+
+    Private Function CurrentGetCoin(ByVal x As Integer, ByVal y As Integer, ByVal j As Integer, ByVal streak_coin_tag As Tuple(Of Integer, Integer), ByVal situation As Integer) As Board.Coin
+        Select Case situation
+            Case 0  ' rows
+                Return board.GetCoinAt(streak_coin_tag.Item1 + j, y)
+            Case 1  ' columns
+                Return board.GetCoinAt(x, streak_coin_tag.Item2 + j)
+            Case 2  ' diagonal down
+                Return board.GetCoinAt(streak_coin_tag.Item1 + j, streak_coin_tag.Item2 + j)
+            Case 3  ' diagonal up
+                Return board.GetCoinAt(streak_coin_tag.Item1 + j, streak_coin_tag.Item2 - j)
+        End Select
+        Return Nothing
+    End Function
+
+    Private Sub Check(ByVal x As Integer, ByVal y As Integer, ByVal situation As Integer)
+        If board.width < 4 Then
+            Return
+        End If
+        Dim inactive_color As Color = Board.Coin.INACTIVE_COLOR
+        Dim streak_coin As Board.Coin
+        Dim streak_color As Color
+        Dim streak_coin_tag As Tuple(Of Integer, Integer) = Nothing
+        Dim current_coin_color As Color
+        Dim winning_color As Color = inactive_color
+        Dim cnt As Integer
+        cnt = 0
+        For i As Integer = -3 To 0
+            Try
+                streak_coin = TryStreakGetCoin(x, y, i, situation)
+                streak_color = streak_coin.BackColor
+                streak_coin_tag = CType(streak_coin.Tag, Tuple(Of Integer, Integer))
+                Exit For
+            Catch ex As Exception
+                ' pass
+            End Try
+        Next
+        If streak_color <> inactive_color Then
+            cnt += 1
+        End If
+        Try
+            TryStreakGetNextCoin(x, y, 0, streak_coin_tag, situation)
+        Catch ex As Exception
+            Return
+        End Try
+        For j As Integer = 1 To 6
+            current_coin_color = CurrentGetCoin(x, y, j, streak_coin_tag, situation).BackColor
+            If current_coin_color.Equals(inactive_color) Then
+                cnt = 0
+                streak_color = current_coin_color
+                Try
+                    TryStreakGetNextCoin(x, y, j, streak_coin_tag, situation)
+                Catch ex As Exception
+                    Return
+                End Try
+                Continue For
+            End If
+            If Not streak_color.Equals(inactive_color) And current_coin_color.Equals(streak_color) Then
+                cnt += 1
+            Else
+                streak_color = current_coin_color
+                cnt = 1
+                Try
+                    TryStreakGetNextCoin(x, y, j, streak_coin_tag, situation)
+                Catch ex As Exception
+                    Return
+                End Try
+                Continue For
+            End If
+            If cnt >= 4 Then
+                winning_color = streak_color
+                Exit For
+            End If
+            Try
+                TryStreakGetNextCoin(x, y, j, streak_coin_tag, situation)
+            Catch ex As Exception
+                Return
+            End Try
+        Next
+        If Not winning_color.Equals(inactive_color) Then
+            Dim frm As Form = New EndAlert(winning_color:=winning_color)
+            frm.ShowDialog()
+            ' Todo: stop game
+        End If
+    End Sub
 
     ' Custom class representing a player in the game with it's color, name and id.
     Class Player
