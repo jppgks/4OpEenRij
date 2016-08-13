@@ -56,7 +56,7 @@ Friend Class Board
             Dim coin = CType(panel.Controls.Item(index + i), Coin)
             If coin.BackColor.Equals(Color.Gray) Then
                 coin.Color(game.current_turn.player.color)
-                game.CheckForEndingSituation()
+                game.CheckForEndingSituation(column, CType(coin.Tag, Tuple(Of Integer, Integer)).Item2)
                 game.SwitchTurns()
                 Return
             End If
@@ -70,6 +70,9 @@ Friend Class Board
     End Function
 
     Friend Function GetCoinAt(ByVal column As Integer, ByVal row As Integer) As Coin
+        If column < 0 Or column > width Or row < 0 Or row > height Then
+            Throw New IndexOutOfRangeException
+        End If
         Return CType(panel.Controls(LinearizedIndex(column, row)), Coin)
     End Function
 

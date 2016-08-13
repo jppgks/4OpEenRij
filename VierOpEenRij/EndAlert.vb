@@ -7,4 +7,8 @@
 
         Me.winning_color = winning_color
     End Sub
+
+    Private Sub EndAlert_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        lbl_message.Text = winning_color.ToString
+    End Sub
 End Class

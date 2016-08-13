@@ -57,67 +57,295 @@ Friend Class Game
         players.Enqueue(current_turn.player)
     End Sub
 
-    Friend Sub CheckForEndingSituation()
-        ' Check rows
-        CheckStraight(board.height, board.width, True)
-        ' Check columns
-        CheckStraight(board.width, board.height, False)
-        ' Check diagonals upwards
-        CheckDiagonals(board.width, board.height, True)
-        ' Check diagonals downwards
-        CheckDiagonals(board.width, board.height, False)
+    Friend Sub CheckForEndingSituation(ByVal column As Integer, ByVal row As Integer)
+        CheckRow(column, row)
+        CheckColumn(column, row)
+        CheckDiagonalDown(column, row)
+        CheckDiagonalUp(column, row)
     End Sub
 
-    Private Sub CheckStraight(ByVal vertical_length As Integer, ByVal horizontal_length As Integer, ByVal is_check_for_row As Boolean)
+    Private Sub CheckRow(ByVal x As Integer, ByVal ROW As Integer)
+        If board.width < 4 Then
+            Return
+        End If
         Dim inactive_color As Color = Board.Coin.INACTIVE_COLOR
+        Dim streak_coin As Board.Coin
         Dim streak_color As Color
+        Dim streak_coin_tag As Tuple(Of Integer, Integer)
         Dim current_coin_color As Color
-        Dim winning_color As Color = Board.Coin.INACTIVE_COLOR
+        Dim winning_color As Color = inactive_color
         Dim cnt As Integer
-        For row As Integer = 0 To vertical_length
-            cnt = 0
-            If is_check_for_row Then
-                streak_color = board.GetCoinAt(0, row).BackColor
-            Else
-                streak_color = board.GetCoinAt(row, 0).BackColor
-            End If
-            If streak_color <> inactive_color Then
-                cnt += 1
-            End If
-            For clm As Integer = 1 To horizontal_length
-                If is_check_for_row Then
-                    current_coin_color = board.GetCoinAt(clm, row).BackColor
-                Else
-                    current_coin_color = board.GetCoinAt(row, clm).BackColor
-                End If
-                If current_coin_color.Equals(inactive_color) Then
-                    cnt = 0
-                    streak_color = current_coin_color
-                    Continue For
-                End If
-                If Not streak_color.Equals(inactive_color) And current_coin_color.Equals(streak_color) Then
-                    cnt += 1
-                Else
-                    streak_color = current_coin_color
-                    cnt = 1
-                    Continue For
-                End If
-                If cnt >= 4 Then
-                    winning_color = streak_color
-                    Exit For
-                    Exit For
-                End If
-            Next
+        cnt = 0
+        For i As Integer = -3 To 0
+            Try
+                streak_coin = board.GetCoinAt(x + i, ROW)
+                streak_color = streak_coin.BackColor
+                streak_coin_tag = CType(streak_coin.Tag, Tuple(Of Integer, Integer))
+                Exit For
+            Catch ex As Exception
+                ' pass
+            End Try
         Next
-        If Not winning_color.IsEmpty Then
+        If streak_color <> inactive_color Then
+            cnt += 1
+        End If
+        Try
+            board.GetCoinAt(streak_coin_tag.Item1 + 1, ROW)
+        Catch ex As Exception
+            Return
+        End Try
+        For j As Integer = 1 To 6
+            current_coin_color = board.GetCoinAt(streak_coin_tag.Item1 + j, ROW).BackColor
+            If current_coin_color.Equals(inactive_color) Then
+                cnt = 0
+                streak_color = current_coin_color
+                Try
+                    board.GetCoinAt(streak_coin_tag.Item1 + j + 1, ROW)
+                Catch ex As Exception
+                    Return
+                End Try
+                Continue For
+            End If
+            If Not streak_color.Equals(inactive_color) And current_coin_color.Equals(streak_color) Then
+                cnt += 1
+            Else
+                streak_color = current_coin_color
+                cnt = 1
+                Try
+                    board.GetCoinAt(streak_coin_tag.Item1 + j + 1, ROW)
+                Catch ex As Exception
+                    Return
+                End Try
+                Continue For
+            End If
+            If cnt >= 4 Then
+                winning_color = streak_color
+                Exit For
+            End If
+            Try
+                board.GetCoinAt(streak_coin_tag.Item1 + j + 1, ROW)
+            Catch ex As Exception
+                Return
+            End Try
+        Next
+        If Not winning_color.Equals(inactive_color) Then
             Dim frm As Form = New EndAlert(winning_color)
             frm.ShowDialog()
             ' Todo: stop game
         End If
     End Sub
 
-    Private Sub CheckDiagonals(ByVal vertical_length As Integer, ByVal horizontal_length As Integer, ByVal is_check_for_upwards As Boolean)
+    Private Sub CheckColumn(ByVal COL As Integer, ByVal y As Integer)
+        If board.height < 4 Then
+            Return
+        End If
+        Dim inactive_color As Color = Board.Coin.INACTIVE_COLOR
+        Dim streak_coin As Board.Coin
+        Dim streak_color As Color
+        Dim streak_coin_tag As Tuple(Of Integer, Integer)
+        Dim current_coin_color As Color
+        Dim winning_color As Color = inactive_color
+        Dim cnt As Integer
+        cnt = 0
+        For i As Integer = -3 To 0
+            Try
+                streak_coin = board.GetCoinAt(COL, y + i)
+                streak_color = streak_coin.BackColor
+                streak_coin_tag = CType(streak_coin.Tag, Tuple(Of Integer, Integer))
+                Exit For
+            Catch ex As Exception
+                ' pass
+            End Try
+        Next
+        If streak_color <> inactive_color Then
+            cnt += 1
+        End If
+        Try
+            board.GetCoinAt(COL, streak_coin_tag.Item2 + 1)
+        Catch ex As Exception
+            Return
+        End Try
+        For j As Integer = 1 To 6
+            current_coin_color = board.GetCoinAt(COL, streak_coin_tag.Item2 + j).BackColor
+            If current_coin_color.Equals(inactive_color) Then
+                cnt = 0
+                streak_color = current_coin_color
+                Try
+                    board.GetCoinAt(COL, streak_coin_tag.Item2 + j + 1)
+                Catch ex As Exception
+                    Return
+                End Try
+                Continue For
+            End If
+            If Not streak_color.Equals(inactive_color) And current_coin_color.Equals(streak_color) Then
+                cnt += 1
+            Else
+                streak_color = current_coin_color
+                cnt = 1
+                Try
+                    board.GetCoinAt(COL, streak_coin_tag.Item2 + j + 1)
+                Catch ex As Exception
+                    Return
+                End Try
+                Continue For
+            End If
+            If cnt >= 4 Then
+                winning_color = streak_color
+                Exit For
+            End If
+            Try
+                board.GetCoinAt(COL, streak_coin_tag.Item2 + j + 1)
+            Catch ex As Exception
+                Return
+            End Try
+        Next
+        If Not winning_color.Equals(inactive_color) Then
+            Dim frm As Form = New EndAlert(winning_color)
+            frm.ShowDialog()
+            ' Todo: stop game
+        End If
+    End Sub
 
+    Private Sub CheckDiagonalDown(ByVal x As Integer, ByVal y As Integer)
+        If board.height < 4 Or board.width < 4 Then
+            Return
+        End If
+        Dim inactive_color As Color = Board.Coin.INACTIVE_COLOR
+        Dim streak_coin As Board.Coin
+        Dim streak_color As Color
+        Dim streak_coin_tag As Tuple(Of Integer, Integer)
+        Dim current_coin_color As Color
+        Dim winning_color As Color = inactive_color
+        Dim cnt As Integer
+        cnt = 0
+        For i As Integer = -3 To 0
+            Try
+                streak_coin = board.GetCoinAt(x + i, y + i)
+                streak_color = streak_coin.BackColor
+                streak_coin_tag = CType(streak_coin.Tag, Tuple(Of Integer, Integer))
+                Exit For
+            Catch ex As Exception
+                ' pass
+            End Try
+        Next
+        If streak_color <> inactive_color Then
+            cnt += 1
+        End If
+        Try
+            board.GetCoinAt(streak_coin_tag.Item1 + 1, streak_coin_tag.Item2 + 1)
+        Catch ex As Exception
+            Return
+        End Try
+        For j As Integer = 1 To 6
+            current_coin_color = board.GetCoinAt(streak_coin_tag.Item1 + j, streak_coin_tag.Item2 + j).BackColor
+            If current_coin_color.Equals(inactive_color) Then
+                cnt = 0
+                streak_color = current_coin_color
+                Try
+                    board.GetCoinAt(streak_coin_tag.Item1 + j + 1, streak_coin_tag.Item2 + j + 1)
+                Catch ex As Exception
+                    Return
+                End Try
+                Continue For
+            End If
+            If Not streak_color.Equals(inactive_color) And current_coin_color.Equals(streak_color) Then
+                cnt += 1
+            Else
+                streak_color = current_coin_color
+                cnt = 1
+                Try
+                    board.GetCoinAt(streak_coin_tag.Item1 + j + 1, streak_coin_tag.Item2 + j + 1)
+                Catch ex As Exception
+                    Return
+                End Try
+                Continue For
+            End If
+            If cnt >= 4 Then
+                winning_color = streak_color
+                Exit For
+            End If
+            Try
+                board.GetCoinAt(streak_coin_tag.Item1 + j + 1, streak_coin_tag.Item2 + j + 1)
+            Catch ex As Exception
+                Return
+            End Try
+        Next
+        If Not winning_color.Equals(inactive_color) Then
+            Dim frm As Form = New EndAlert(winning_color)
+            frm.ShowDialog()
+            ' Todo: stop game
+        End If
+    End Sub
+
+    Private Sub CheckDiagonalUp(ByVal x As Integer, ByVal y As Integer)
+        If board.height < 4 Or board.width < 4 Then
+            Return
+        End If
+        Dim inactive_color As Color = Board.Coin.INACTIVE_COLOR
+        Dim streak_coin As Board.Coin
+        Dim streak_color As Color
+        Dim streak_coin_tag As Tuple(Of Integer, Integer)
+        Dim current_coin_color As Color
+        Dim winning_color As Color = inactive_color
+        Dim cnt As Integer
+        cnt = 0
+        For i As Integer = -3 To 0
+            Try
+                streak_coin = board.GetCoinAt(x + i, y - i)
+                streak_color = streak_coin.BackColor
+                streak_coin_tag = CType(streak_coin.Tag, Tuple(Of Integer, Integer))
+                Exit For
+            Catch ex As Exception
+                ' pass
+            End Try
+        Next
+        If streak_color <> inactive_color Then
+            cnt += 1
+        End If
+        Try
+            board.GetCoinAt(streak_coin_tag.Item1 + 1, streak_coin_tag.Item2 - 1)
+        Catch ex As Exception
+            Return
+        End Try
+        For j As Integer = 1 To 6
+            current_coin_color = board.GetCoinAt(streak_coin_tag.Item1 + j, streak_coin_tag.Item2 - j).BackColor
+            If current_coin_color.Equals(inactive_color) Then
+                cnt = 0
+                streak_color = current_coin_color
+                Try
+                    board.GetCoinAt(streak_coin_tag.Item1 + j + 1, streak_coin_tag.Item2 - (j + 1))
+                Catch ex As Exception
+                    Return
+                End Try
+                Continue For
+            End If
+            If Not streak_color.Equals(inactive_color) And current_coin_color.Equals(streak_color) Then
+                cnt += 1
+            Else
+                streak_color = current_coin_color
+                cnt = 1
+                Try
+                    board.GetCoinAt(streak_coin_tag.Item1 + j + 1, streak_coin_tag.Item2 - (j + 1))
+                Catch ex As Exception
+                    Return
+                End Try
+                Continue For
+            End If
+            If cnt >= 4 Then
+                winning_color = streak_color
+                Exit For
+            End If
+            Try
+                board.GetCoinAt(streak_coin_tag.Item1 + j + 1, streak_coin_tag.Item2 - (j + 1))
+            Catch ex As Exception
+                Return
+            End Try
+        Next
+        If Not winning_color.Equals(inactive_color) Then
+            Dim frm As Form = New EndAlert(winning_color)
+            frm.ShowDialog()
+            ' Todo: stop game
+        End If
     End Sub
 
     ' Custom class representing a player in the game with it's color, name and id.
