@@ -7,8 +7,8 @@ Friend Class Game
     Property board As Board
     Private Property players As Queue(Of Player) = New Queue(Of Player)
     Property current_turn As Turn
-    Private Property scores As ArrayList = New ArrayList()
     Private name_labels As ArrayList = New ArrayList()
+    Private score_labels As ArrayList = New ArrayList()
     Private colors As ArrayList = New ArrayList()
     Friend full_columns As BitArray
 
@@ -30,11 +30,27 @@ Friend Class Game
         name_labels.Add(frmMain.lbl_name_player2)
     End Sub
 
+    Private Sub InitializeScoreLabels()
+        score_labels.Add(frmMain.lbl_score1)
+        score_labels.Add(frmMain.lbl_score2)
+    End Sub
+
+    ' Initialize each player with an id, color and given name.
+    Private Sub InitializePlayers(ByVal names As String())
+        For i As Integer = 0 To names.GetUpperBound(0)
+            Dim player = New Player(i + 1, CType(colors(i), Color), names(i), CType(name_labels(i), Label), CType(score_labels(i), Label))
+            players.Enqueue(player)
+            ' Add player's name to the name label
+            CType(name_labels(i), Control).Text = player.name
+        Next
+    End Sub
+
     Friend Sub Start(ByVal names As String())
         full_columns = New BitArray(board.width + 1)
         full_columns.SetAll(False)
         players.Clear()
         InitializeNameLabels()
+        InitializeScoreLabels()
         InitializePlayers(names)
         frmMain.tmr_turn.Enabled = True
         ' Make first player the active player.
@@ -43,15 +59,10 @@ Friend Class Game
         frmMain.pnl_game.Enabled = True
     End Sub
 
-    ' Initialize each player with an id, color and given name.
-    Private Sub InitializePlayers(ByVal names As String())
-        For i As Integer = 0 To names.GetUpperBound(0)
-            Dim player = New Player(i + 1, CType(colors(i), Color), names(i))
-            players.Enqueue(player)
-            scores.Add(0)
-            ' Add player's name to the name label
-            CType(name_labels(i), Control).Text = player.name
-        Next
+    Private Sub EndGame(ByVal winner As Player)
+        If winner IsNot Nothing Then
+            winner.AddPoint()
+        End If
     End Sub
 
     ' Create new turn for next player
@@ -71,7 +82,7 @@ Friend Class Game
         If is_draw Then
             Dim frm As Form = New EndAlert(is_draw:=True)
             frm.ShowDialog()
-            ' Todo: stop game
+            EndGame(Nothing)
         End If
     End Sub
 
@@ -191,9 +202,18 @@ Friend Class Game
         If Not winning_color.Equals(inactive_color) Then
             Dim frm As Form = New EndAlert(winning_color:=winning_color)
             frm.ShowDialog()
-            ' Todo: stop game
+            EndGame(GetPlayerFromColor(winning_color))
         End If
     End Sub
+
+    Private Function GetPlayerFromColor(ByVal color As Color) As Player
+        For Each player In players
+            If player.color = color Then
+                Return player
+            End If
+        Next
+        Return Nothing
+    End Function
 
     ' Custom class representing a player in the game with it's color, name and id.
     Class Player
@@ -201,9 +221,11 @@ Friend Class Game
         Property color As Color
         Property name As String
         Property id As Integer
+        Property lbl_score As Label
+        Property score As Integer = 0
 
 
-        Sub New(ByVal id As Integer, ByVal color As Color, ByVal name As String)
+        Sub New(ByVal id As Integer, ByVal color As Color, ByVal name As String, ByRef lbl_name As Label, ByRef lbl_score As Label)
             Me.id = id
             Me.color = color
             If name.Equals("") Then
@@ -211,6 +233,13 @@ Friend Class Game
             Else
                 Me.name = name
             End If
+            lbl_name.Text = Me.name
+            Me.lbl_score = lbl_score
+        End Sub
+
+        Friend Sub AddPoint()
+            score += 1
+            lbl_score.Text = score.ToString
         End Sub
     End Class
 
